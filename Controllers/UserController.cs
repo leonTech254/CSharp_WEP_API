@@ -53,5 +53,17 @@ public class UserController : ControllerBase
 		return Ok("User deete successfully");
 	}
 
+	[HttpPost("users/add/new")]
+	public ActionResult AddNewUser([FromBody] Users user)
+	{
+		if (user == null)
+		{
+			return BadRequest("Body required");
+
+		}
+		usersList.Add(user);
+		return Ok("User Added succesfully");
+
+	}
 
 }
