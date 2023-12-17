@@ -44,6 +44,14 @@ public class UserController : ControllerBase
 		return Ok(user);
 	}
 
-	
+	[HttpDelete("user/delete/{id}")]
+	public ActionResult DeleteUser(int id)
+	{
+		List<Users> users=usersList;
+		Users user = users.FirstOrDefault(e => e.Id == id);
+		users.Remove(user);
+		return Ok("User deete successfully");
+	}
+
 
 }
