@@ -15,6 +15,7 @@ public class UserController : ControllerBase
 		{
 			Users user = new Users()
 			{
+				Id = i,
 				user_email = $"{i}@gmail.com",
 				user_password = $"{i}password",
 				user_phone = $"{i}userphone"
@@ -28,4 +29,21 @@ public class UserController : ControllerBase
 	{
 		return Ok(usersList);
 	}
+
+	[HttpGet("get/user/{id}")]
+	public ActionResult<Users> GetUserByID(int id)
+	{
+		List<Users> users = usersList;
+		Users user=users.FirstOrDefault(e => e.Id == id);
+
+		if(user == null)
+		{
+			return NotFound();
+		}
+
+		return Ok(user);
+	}
+
+	
+
 }
