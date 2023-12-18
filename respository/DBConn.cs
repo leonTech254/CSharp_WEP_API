@@ -6,9 +6,7 @@ namespace DatabaseConnection
 {
 
 	public class DbConn : DbContext
-
 	{
-
 		public DbSet<Users> Users { get; set; }
 		public DbSet<Order> orders { get; set; }
 		public DbSet<Product> Products { get; set; }

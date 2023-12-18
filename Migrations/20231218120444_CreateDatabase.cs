@@ -12,21 +12,6 @@ namespace WEB_API_ENDPOINT.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "orders",
-                columns: table => new
-                {
-                    OrderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_orders", x => x.OrderId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -49,12 +34,40 @@ namespace WEB_API_ENDPOINT.Migrations
                     user_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     user_email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     user_password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    user_phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    user_phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orders", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_orders_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_ProductID",
+                table: "orders",
+                column: "ProductID");
         }
 
         /// <inheritdoc />
@@ -64,10 +77,10 @@ namespace WEB_API_ENDPOINT.Migrations
                 name: "orders");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Products");
         }
     }
 }

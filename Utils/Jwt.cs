@@ -14,11 +14,20 @@ namespace JwTNameService
 		
 		}
 
+		public Jwt()
+		{
+
+		}
+
 		public String? JwTGenerateToken(Users user)
 		{
-			String issuer = _configuration.GetSection("JwtOptions:issuer").Value;
+			/*String issuer = _configuration.GetSection("JwtOptions:issuer").Value;
 			String secret_key = _configuration.GetSection("JwtOptions:secrete_Key").Value;
-			String Audience = _configuration.GetSection("JwtOptions:Audience").Value;
+			String Audience = _configuration.GetSection("JwtOptions:Audience").Value;*/
+
+			String issuer = "martin_leon";
+			String secret_key = "leonMartin234567deggllsdjvbhvbshfvbshdvsjdvhbsjvsvQOQCMASCNQFECJEJDRJ";
+			String Audience = "users";
 
 			var SecurityKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret_key));
 			var Credentials= new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);

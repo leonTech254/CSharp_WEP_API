@@ -16,7 +16,18 @@ namespace userModel
 		public string user_password { get; set; }
 		[StringLength(100)]
 		public string user_phone { get; set; }
+		
 		public String role { get; set; }
+
+
+		//defaults
+		public Users()
+		{
+			if (string.IsNullOrEmpty(role))
+			{
+				role = "USER";
+			}
+		}
 	}
 }
 	

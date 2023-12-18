@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WEB_API_ENDPOINT.Migrations
 {
     [DbContext(typeof(DbConn))]
-    [Migration("20231218071039_CreateDatabase")]
+    [Migration("20231218120444_CreateDatabase")]
     partial class CreateDatabase
     {
         /// <inheritdoc />
@@ -43,7 +43,12 @@ namespace WEB_API_ENDPOINT.Migrations
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
                     b.HasKey("OrderId");
+
+                    b.HasIndex("ProductID");
 
                     b.ToTable("orders");
                 });
@@ -76,6 +81,10 @@ namespace WEB_API_ENDPOINT.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("user_email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -99,6 +108,17 @@ namespace WEB_API_ENDPOINT.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Order", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

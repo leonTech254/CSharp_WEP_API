@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ public class UserController : ControllerBase
 	}
 
 	[HttpGet("all")]
+	[Authorize]
 	public ActionResult<List<Users>> GetAllUsers()
 	{
 		return Ok(usersList);

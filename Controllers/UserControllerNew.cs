@@ -1,3 +1,4 @@
+using LoginDTO_namespace;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using userModel;
@@ -25,10 +26,10 @@ namespace UserControlller_NameSpace
 		}
 
 		[HttpPost("login/")]
-		public ActionResult UserLogin([FromBody] Users user )
+		public ActionResult UserLogin([FromBody] LoginDTO user )
 		{
-			String username = user.user_name;
-			String password = user.user_password;
+			String username = user.UserName;
+			String password = user.password;
 			return uSerService.LoginUser(username, password);
 		}
 
