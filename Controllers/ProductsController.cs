@@ -86,7 +86,6 @@ namespace ProductsControler
 				Response.Headers.Add("msg", $"product with {product.ProductId} updated successfully");
 				return NoContent();
 				/*return Ok($"Product with id of {product.ProductId} updated successfully");*/
-				
 			}
 			else
 			{
