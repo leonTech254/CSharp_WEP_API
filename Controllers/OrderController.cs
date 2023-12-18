@@ -1,96 +1,95 @@
-using DatabaseConnection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query;
 using OrderService_namespace;
 
 namespace OrderController
 {
-
-
 	[Route("api/v1/orders/")]
 	[ApiController]
-	public class OrderContoller:ControllerBase
+	public class OrderController : ControllerBase
 	{
-		DbConn dbConn;
-		OrderService orderService;
-		public OrderContoller() { 
-			dbConn = new DbConn();
-	
+		private readonly OrderService _orderService;
+
+		public OrderController(OrderService orderService)
+		{
+			_orderService = orderService;
 		}
 
 		[HttpPost("add/")]
 		[Authorize]
-		public ActionResult AddOrder([FromBody] Order order)
+		public ActionResult<Order> AddOrder([FromBody] Order order)
 		{
+			// Simulate extracting token from Authorization header
 			string jwtToken = HttpContext.Request.Headers["Authorization"];
-			if(jwtToken != null) {
-				String token =jwtToken.ToString().Replace("Bearer ", "");
-				return orderService.placeOrder(order, token);
-			}else
+			if (jwtToken != null)
+			{
+				String token = jwtToken.ToString().Replace("Bearer ", "");
+
+				// Call the service to add the order
+				var addedOrder = _orderService.placeOrder(order,token);
+
+				return Ok(addedOrder);
+			}
+			else
 			{
 				return NotFound();
 			}
-
 		}
 
 		[HttpGet("get/all")]
-		public ActionResult<List<Order>> GetOrders()
+		public ActionResult<IQueryable<Order>> GetOrders()
 		{
-			var orders = dbConn.orders;
+			// Call the service to get all orders
+			var orders = _orderService.GetOrders();
 			return Ok(orders);
 		}
 
 		[HttpGet("get/{id}")]
-		public ActionResult<Order> Getorder(int id)
+		public ActionResult<Order> GetOrder(int id)
 		{
-			var order = dbConn.orders.FirstOrDefault(e=>e.OrderId == id);
-			if(order == null)
+			// Call the service to get an order by id
+			var order = _orderService.GetOrder(id);
+			if (order == null)
+			{
+				Response.Headers.Add("msg", $"The order with id {id} does not exist");
+				return NotFound();
+			}
+			else
 			{
 				return Ok(order);
-			}else
-			{
-				Response.Headers.Add("msg",$"the product with id {id} does not exist");
-				return NotFound();
 			}
-
 		}
+
 		[HttpDelete("delete/{id}")]
-		public ActionResult<Order> DeleteOrder(int id)
+		public ActionResult DeleteOrder(int id)
 		{
-			var order = dbConn.orders.FirstOrDefault(e => e.OrderId == id);
-			if (order == null)
+			// Call the service to delete an order by id
+			var result = _orderService.DeleteOrder(id);
+			if (result)
 			{
-				dbConn.orders.Remove(order); 
-				dbConn.SaveChanges();
-				return Ok("Product removed successfully");
+				return Ok("Order removed successfully");
 			}
 			else
 			{
-				Response.Headers.Add("msg", $"the product with id {id} does not exist");
+				Response.Headers.Add("msg", $"The order with id {id} does not exist");
 				return NotFound();
 			}
-
 		}
+
 		[HttpPatch("update/{id}")]
-		public ActionResult<Order> UpdateProduct(int id)
+		public ActionResult UpdateOrderStatus(int id, [FromBody] string newStatus)
 		{
-			var order = dbConn.orders.FirstOrDefault(e => e.OrderId == id);
-			if (order == null)
+			// Call the service to update the order status
+			var result = _orderService.UpdateOrderStatus(id, newStatus);
+			if (result)
 			{
-				dbConn.orders.Update(order);
-				dbConn.SaveChanges();
-				return Ok("Product Upfate successfully");
+				return Ok("Order status updated successfully");
 			}
 			else
 			{
-				Response.Headers.Add("msg", $"the product with id {id} does not exist");
+				Response.Headers.Add("msg", $"The order with id {id} does not exist");
 				return NotFound();
 			}
-
 		}
-
-
 	}
-
 }

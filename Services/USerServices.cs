@@ -6,19 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using PasswordEncryption_namespase;
 using userModel;
 
-namespace USerService
+namespace USerService_namespace
 {
 	public class UserService
 	{
 		private DbConn dbConn;
 		private PasswordEncryption passwordEncryption;
-		private Jwt jwt;
-		
-		public UserService() { 
+		private readonly Jwt _jwt;
+
+		public UserService(Jwt jwt) { 
 
 			dbConn = new DbConn();
 			passwordEncryption = new PasswordEncryption();
-			jwt = new Jwt();
+			_jwt = jwt;
+
 
 		}
 
@@ -106,7 +107,7 @@ namespace USerService
 				bool iscorrect=passwordEncryption.PasswordVerifation(password, hashedpassword);
 				if(iscorrect)
 				{
-					String token = jwt.JwTGenerateToken(user);
+					String token = _jwt.GenerateToken(user);
 				
 					return new OkObjectResult(new {Msg= "Login Successfully",usertoken=token });
 				}else

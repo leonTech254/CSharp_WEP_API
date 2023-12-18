@@ -1,5 +1,9 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using userModel;
@@ -9,53 +13,42 @@ namespace JwTNameService
 	public class Jwt
 	{
 		private readonly IConfiguration _configuration;
-		public Jwt(IConfiguration configuration) {
-			_configuration = configuration;
-		
+
+		public Jwt(IConfiguration configuration)
+		{
+			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 		}
 
-		public Jwt()
+		internal string? GenerateToken(Users user)
 		{
+			string issuer = _configuration.GetSection("JwtOptions:issuer").Value;
+			string secretKey = _configuration.GetSection("JwtOptions:secrete_Key").Value;
+			string audience = _configuration.GetSection("JwtOptions:Audience").Value;
 
-		}
+			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-		public String? JwTGenerateToken(Users user)
-		{
-			/*String issuer = _configuration.GetSection("JwtOptions:issuer").Value;
-			String secret_key = _configuration.GetSection("JwtOptions:secrete_Key").Value;
-			String Audience = _configuration.GetSection("JwtOptions:Audience").Value;*/
-
-			String issuer = "martin_leon";
-			String secret_key = "leonMartin234567deggllsdjvbhvbshfvbshdvsjdvhbsjvsvQOQCMASCNQFECJEJDRJ";
-			String Audience = "users";
-
-			var SecurityKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret_key));
-			var Credentials= new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
-
-
-			//claims
+			// Claims
 			var claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.Name,user.user_name),
-				new Claim(ClaimTypes.Role,user.role),
-				new Claim("user_id" ,$"{user.Id}"),
+				new Claim(ClaimTypes.Name, user.user_name),
+				new Claim(ClaimTypes.Role, user.role),
+				new Claim("user_id", $"{user.Id}"),
 			};
-		
 
 			var token = new JwtSecurityToken(
-				issuer, //issuer
-				Audience, //audience
-				claims, //claims
+				issuer,           // Issuer
+				audience,         // Audience
+				claims,           // Claims
 				DateTime.Now,
-				DateTime.Now.AddMinutes(30), //expire date
-				Credentials //credentials
-				);
+				DateTime.Now.AddMinutes(30),  // Expiry
+				credentials        // Signing credentials
+			);
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
-
-		public string? GetUSernamefromTheToken(string jwtToken)
+		internal string? GetUsernameFromToken(string jwtToken)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var token = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
@@ -65,7 +58,7 @@ namespace JwTNameService
 			return usernameClaim?.Value;
 		}
 
-		public string? GetUserIdfromTheToken(string jwtToken)
+		internal string? GetUserIdFromToken(string jwtToken)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var token = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
@@ -74,5 +67,7 @@ namespace JwTNameService
 
 			return userId?.Value;
 		}
+
+		
 	}
 }

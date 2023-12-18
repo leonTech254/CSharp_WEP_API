@@ -2,7 +2,7 @@ using LoginDTO_namespace;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using userModel;
-using USerService;
+using USerService_namespace;
 
 namespace UserControlller_NameSpace
 {
@@ -10,9 +10,9 @@ namespace UserControlller_NameSpace
 	[ApiController]
 	public class UserControllerCl
 	{
-		UserService uSerService;
-		public UserControllerCl() {
-			uSerService = new UserService();
+		private readonly UserService _uSerService;
+		public UserControllerCl(UserService userService) {
+		_uSerService=userService;
 		
 		}
 
@@ -22,7 +22,7 @@ namespace UserControlller_NameSpace
 		[HttpPost("add/")]
 		public ActionResult AddNewUser([FromBody] Users user)
 		{
-			return uSerService.AddUser(user);
+			return _uSerService.AddUser(user);
 		}
 
 		[HttpPost("login/")]
@@ -30,25 +30,25 @@ namespace UserControlller_NameSpace
 		{
 			String username = user.UserName;
 			String password = user.password;
-			return uSerService.LoginUser(username, password);
+			return _uSerService.LoginUser(username, password);
 		}
 
 		[HttpGet("get/")]
 		public ActionResult GetAllUSers()
 		{
-			return uSerService.GetAllUsers();
+			return _uSerService.GetAllUsers();
 		}
 
 		[HttpDelete("delete/{id}")]
 		public ActionResult DeleteUser(int id)
 		{
-			return uSerService.DeteUserById(id);
+			return _uSerService.DeteUserById(id);
 		}
 
 		[HttpPatch("update/{id}")]
 		public ActionResult UpdateUSer([FromBody] Users user, int id)
 		{
-			return uSerService.UpdateUSer(user,id);
+			return _uSerService.UpdateUSer(user,id);
 
 		}
 	}

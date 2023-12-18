@@ -1,8 +1,13 @@
+using DatabaseConnection;
+using JwTNameService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OrderService_namespace;
 using policyConfigurations_pnamespace;
+using ProductsService_namespace;
 using System.Text;
+using USerService_namespace;
 
 class ProgramEntry
 {
@@ -38,6 +43,14 @@ class ProgramEntry
 				}
 			});
 		});
+		//=====================================REGISTERING SERVICES====================================================
+		builder.Services.AddScoped<Jwt>();
+		builder.Services.AddScoped<OrderService>();
+		builder.Services.AddScoped<UserService>();
+		builder.Services.AddScoped<ProductService>();
+		builder.Services.AddScoped<DbConn>();
+
+
 
 		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer(options =>
