@@ -38,6 +38,7 @@ namespace JwTNameService
 			{
 				new Claim(ClaimTypes.Name,user.user_name),
 				new Claim(ClaimTypes.Role,user.role),
+				new Claim("user_id" ,$"{user.Id}"),
 			};
 		
 
