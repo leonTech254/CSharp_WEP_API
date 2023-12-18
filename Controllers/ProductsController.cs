@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductsService_namespace;
 
@@ -14,6 +15,7 @@ namespace ProductsControler
 		}
 
 		[HttpPost("add/")]
+		[Authorize(Roles = "ADMIN")]
 		public ActionResult AddProduct([FromBody] Product product)
 		{
 			return _productService.AddProduct(product);
@@ -32,12 +34,14 @@ namespace ProductsControler
 		}
 
 		[HttpDelete("delete/{id}")]
+		[Authorize(Roles = "ADMIN")]
 		public ActionResult DeleteProduct(int id)
 		{
 			return _productService.DeleteProduct(id);
 		}
 
 		[HttpPatch("update/product/")]
+		[Authorize(Roles = "ADMIN")]
 		public ActionResult UpdateProduct([FromBody] Product product)
 		{
 			return _productService.UpdateProduct(product);

@@ -61,6 +61,7 @@ namespace OrderController
 		}
 
 		[HttpDelete("delete/{id}")]
+		[Authorize(Roles = "ADMIN")]
 		public ActionResult DeleteOrder(int id)
 		{
 			// Call the service to delete an order by id
@@ -77,6 +78,7 @@ namespace OrderController
 		}
 
 		[HttpPatch("update/{id}")]
+		[Authorize(Roles = "ADMIN")]
 		public ActionResult UpdateOrderStatus(int id, [FromBody] string newStatus)
 		{
 			// Call the service to update the order status
