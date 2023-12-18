@@ -7,10 +7,11 @@ namespace OrderController
 
 
 	[Route("api/v1/orders/")]
-	public class ProductController:ControllerBase
+	[ApiController]
+	public class OrderContoller:ControllerBase
 	{
 		DbConn dbConn;
-		public ProductController() { 
+		public OrderContoller() { 
 			dbConn = new DbConn();
 	
 		}

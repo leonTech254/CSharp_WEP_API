@@ -15,5 +15,7 @@ public class Order
 	[ForeignKey("Products")]
 	public int ProductID { get; set; }
 
+	public virtual Product Product { get; set; }
+
 
 }
