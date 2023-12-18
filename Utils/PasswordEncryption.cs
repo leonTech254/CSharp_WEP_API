@@ -20,5 +20,13 @@ namespace PasswordEncryption_namespase
 				return encrPasword;
 			}
 		}
+
+
+		public bool PasswordVerifation(String rawPassword,String databaseUSerPassword)
+		{
+
+			return EncryptPassword(rawPassword).Equals(databaseUSerPassword);
+			
+		}
 	}
 }
