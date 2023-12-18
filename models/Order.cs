@@ -15,6 +15,9 @@ public class Order
 	[ForeignKey("Products")]
 	public int ProductID { get; set; }
 
+	[ForeignKey("Users")]
+	public int userId {  get; set; }
+
 	public virtual Product Product { get; set; }
 
 
