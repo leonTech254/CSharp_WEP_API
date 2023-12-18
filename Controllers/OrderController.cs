@@ -1,6 +1,8 @@
 using DatabaseConnection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query;
+using OrderService_namespace;
 
 namespace OrderController
 {
@@ -11,17 +13,24 @@ namespace OrderController
 	public class OrderContoller:ControllerBase
 	{
 		DbConn dbConn;
+		OrderService orderService;
 		public OrderContoller() { 
 			dbConn = new DbConn();
 	
 		}
 
 		[HttpPost("add/")]
+		[Authorize]
 		public ActionResult AddOrder([FromBody] Order order)
 		{
-			dbConn.orders.Add(order);
-			dbConn.SaveChanges();
-			return Ok("Order placed successfully");
+			string jwtToken = HttpContext.Request.Headers["Authorization"];
+			if(jwtToken != null) {
+				String token =jwtToken.ToString().Replace("Bearer ", "");
+				return orderService.placeOrder(order, token);
+			}else
+			{
+				return NotFound();
+			}
 
 		}
 

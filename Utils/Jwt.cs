@@ -64,5 +64,15 @@ namespace JwTNameService
 
 			return usernameClaim?.Value;
 		}
+
+		public string? GetUserIdfromTheToken(string jwtToken)
+		{
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var token = tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
+
+			var userId = token?.Claims.FirstOrDefault(claim => claim.Type == "user_id");
+
+			return userId?.Value;
+		}
 	}
 }
