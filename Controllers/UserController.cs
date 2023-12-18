@@ -27,7 +27,7 @@ public class UserController : ControllerBase
 	}
 
 	[HttpGet("all")]
-	[Authorize]
+	[Authorize(Roles = "USER")]
 	public ActionResult<List<Users>> GetAllUsers()
 	{
 		return Ok(usersList);

@@ -11,13 +11,13 @@ namespace policyConfigurations_pnamespace
 			options.AddPolicy("RequireAdminRole", policy =>
 			{
 				policy.RequireAuthenticatedUser();
-				policy.RequireRole("Admin");
+				policy.RequireRole("ADMIN");
 			});
 
 			options.AddPolicy("RequireUserRole", policy =>
 			{
 				policy.RequireAuthenticatedUser();
-				policy.RequireRole("User");
+				policy.RequireRole("USER");
 			});
 		}
 	}
