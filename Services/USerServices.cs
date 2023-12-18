@@ -1,5 +1,6 @@
 using Azure;
 using DatabaseConnection;
+using JwTNameService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PasswordEncryption_namespase;
@@ -9,12 +10,15 @@ namespace USerService
 {
 	public class UserService
 	{
-		DbConn dbConn;
-		PasswordEncryption passwordEncryption;
+		private DbConn dbConn;
+		private PasswordEncryption passwordEncryption;
+		private Jwt jwt;
+		
 		public UserService() { 
 
 			dbConn = new DbConn();
 			passwordEncryption = new PasswordEncryption();
+			jwt = new Jwt();
 
 		}
 
@@ -102,7 +106,9 @@ namespace USerService
 				bool iscorrect=passwordEncryption.PasswordVerifation(password, hashedpassword);
 				if(iscorrect)
 				{
-					return new OkObjectResult("Login Successfully");
+					String token = jwt.JwTGenerateToken(user);
+				
+					return new OkObjectResult(new {Msg= "Login Successfully",usertoken=token });
 				}else
 				{
 					return new BadRequestResult();

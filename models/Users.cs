@@ -11,11 +11,12 @@ namespace userModel
 		[StringLength(100)]
 		public String user_name { get; set; }
 		[StringLength(100)]
-		public string user_email { get; set; }
+		public string user_email { get; set; } 
 		[StringLength(100)]
 		public string user_password { get; set; }
 		[StringLength(100)]
 		public string user_phone { get; set; }
+		public String role { get; set; }
 	}
 }
 	
