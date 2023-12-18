@@ -20,9 +20,9 @@ namespace ProductsControler
 		}
 
 		[HttpGet("get/all")]
-		public ActionResult<List<Product>> GetProducts()
+		public ActionResult<PaginatedResult<Product>> GetProducts()
 		{
-			return _productService.GetProducts();
+			return _productService.GetProducts(1,2);
 		}
 
 		[HttpGet("get/{id}")]
@@ -41,6 +41,13 @@ namespace ProductsControler
 		public ActionResult UpdateProduct([FromBody] Product product)
 		{
 			return _productService.UpdateProduct(product);
+		}
+
+		[HttpGet("filter/")]
+		public ActionResult<List<Product>> filterProducts([FromQuery] string productName, [FromQuery] decimal? price)
+		{
+
+			return _productService.FilterProducts(productName,price);
 		}
 	}
 }
